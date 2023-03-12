@@ -1,3 +1,5 @@
+package SingleConnection;
+
 import java.io.DataOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
