@@ -29,13 +29,13 @@ public class ServerDataHandler implements Runnable {
             String input;
             while ((input = dataInputStream.readUTF()) != null){
                 if(input.equals("/quit")){
-                    broadcastData("User has Left the chat");
                     removeUser();
                 }else {
                     broadcastData(input);
                 }
             }
         }catch (Exception e){
+            System.out.println("Exception in the ServerDataHandler. e : " + e);
             e.printStackTrace();
         }
 
@@ -48,6 +48,7 @@ public class ServerDataHandler implements Runnable {
                 serverDataHandler.dataOutputStream.writeUTF(input);
                 serverDataHandler.dataOutputStream.flush();
             }catch (Exception e){
+                System.out.println("Exception while broadcasting the data. e : " + e);
                 e.printStackTrace();
             }
         }
@@ -59,18 +60,21 @@ public class ServerDataHandler implements Runnable {
         broadcastData("User has Left the chat");
     }
 
-    public void close() throws Exception{
+    public void close() {
 
-        removeUser();
-
-        if(!socket.isClosed()){
-            socket.close();
-        }
-        if(dataInputStream != null){
-            dataInputStream.close();
-        }
-        if(dataOutputStream != null){
-            dataOutputStream.close();
+        try {
+            if(!socket.isClosed()){
+                socket.close();
+            }
+            if(dataInputStream != null){
+                dataInputStream.close();
+            }
+            if(dataOutputStream != null){
+                dataOutputStream.close();
+            }
+        }catch (Exception e){
+            System.out.println("Exception while closing the socket. e : " + e);
+            e.printStackTrace();
         }
 
     }

@@ -27,13 +27,16 @@ public class Server {
                 userList.add(serverDataHandler);
             }
         }catch (Exception e){
-            closeServerSocket();
+            System.out.println("Exception while handling the connection. e : " + e);
             e.printStackTrace();
+        }finally {
+            closeServerSocket();
         }
 
     }
 
     private void closeServerSocket(){
+
         try {
             if(serverSocket != null){
                 serverSocket.close();
@@ -43,8 +46,17 @@ public class Server {
                 serverDataHandler.close();
             }
         }catch (Exception e){
+            System.out.println("Exception while closing the server socket. e : " + e);
             e.printStackTrace();
         }
+
+    }
+
+    public static void main(String[] args) throws Exception{
+
+        Server server = new Server();
+        server.startServer();
+
     }
 
 }
