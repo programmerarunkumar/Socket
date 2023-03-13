@@ -21,19 +21,15 @@ public class Client {
 
     public void readData() throws Exception {
 
-        System.out.println("Started the read");
-
         ClientDataHandling clientDataHandling = new ClientDataHandling(socket);
         Thread thread = new Thread(clientDataHandling);
         thread.start();
 
-        System.out.println("Completed the read");
-
     }
 
-    public void writeData() throws Exception{
+    public void writeData() {
 
-        System.out.println("Started the write");
+        System.out.println("Started the client write");
 
         try {
             Scanner scanner = new Scanner(System.in);
@@ -51,13 +47,17 @@ public class Client {
         }catch (Exception e){
             System.out.println("Exception during the client write operation. e : " + e);
             e.printStackTrace();
+        }finally {
+            close();
         }
 
-        System.out.println("Completed the write");
+        System.out.println("Completed the client write");
 
     }
 
     private void close() {
+
+        System.out.println("Client Close Method Started");
 
         try {
             if(dataInputStream != null){
@@ -74,6 +74,8 @@ public class Client {
             e.printStackTrace();
         }
 
+        System.out.println("Client Close Method Completed");
+
     }
 
     public static void main(String[] args) throws Exception {
@@ -84,6 +86,7 @@ public class Client {
         String clientUserName = scanner.nextLine();
 
         Socket socket = new Socket("localhost",1234);
+
         Client client = new Client(socket, clientUserName);
         client.readData();
         client.writeData();

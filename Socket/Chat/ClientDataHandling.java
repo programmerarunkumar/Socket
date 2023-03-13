@@ -23,31 +23,49 @@ public class ClientDataHandling implements Runnable{
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
-
-    private void readData() throws Exception {
-
-        while (socket.isConnected()){
-            String data = dataInputStream.readUTF();
-            System.out.println(data);
-        }
-        close();
 
     }
 
-    private void close() throws Exception{
+    private void readData() {
 
-        System.out.println("Close Method Called");
+        System.out.println("Started the client read");
 
-        if(!socket.isClosed()){
-            socket.close();
+        try {
+            while (socket.isConnected()){
+                String data = dataInputStream.readUTF();
+                System.out.println(data);
+            }
+        }catch (Exception e){
+            System.out.println("Exception during the client read operation. e : " + e);
+            e.printStackTrace();
+        }finally {
+            close();
         }
-        if(dataInputStream != null){
-            dataInputStream.close();
+
+        System.out.println("Completed the client read");
+
+    }
+
+    private void close() {
+
+        System.out.println("Client Close Method Started");
+
+        try {
+            if(dataInputStream != null){
+                dataInputStream.close();
+            }
+            if(dataOutputStream != null){
+                dataOutputStream.close();
+            }
+            if(!socket.isClosed()){
+                socket.close();
+            }
+        }catch (Exception e){
+            System.out.println("Exception while closing the client. e : " + e);
+            e.printStackTrace();
         }
-        if(dataOutputStream != null){
-            dataOutputStream.close();
-        }
+
+        System.out.println("Client Close Method Completed");
 
     }
 
