@@ -21,8 +21,8 @@ public class Client {
 
     public void readData() throws Exception {
 
-        ClientDataHandling clientDataHandling = new ClientDataHandling(socket);
-        Thread thread = new Thread(clientDataHandling);
+        ClientListener clientListener = new ClientListener(socket);
+        Thread thread = new Thread(clientListener);
         thread.start();
 
     }

@@ -4,13 +4,13 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-public class ClientDataHandling implements Runnable{
+public class ClientListener implements Runnable{
 
     private Socket socket;
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
 
-    ClientDataHandling(Socket socket) throws Exception{
+    ClientListener(Socket socket) throws Exception{
         this.socket = socket;
         this.dataInputStream =  new DataInputStream(socket.getInputStream());
         this.dataOutputStream = new DataOutputStream(socket.getOutputStream());
