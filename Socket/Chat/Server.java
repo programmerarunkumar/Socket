@@ -13,7 +13,7 @@ public class Server {
         this.serverSocket = new ServerSocket(1234);;
     }
 
-    public void startServer() throws Exception{
+    public void startServer() {
 
         try {
             while (!serverSocket.isClosed()){
