@@ -5,19 +5,19 @@ import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class ServerHandler implements Runnable {
+public class ConnectionHandler implements Runnable {
 
     private Socket socket;
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
-    static ArrayList<ServerHandler> userList = new ArrayList<>();
+    static ArrayList<ConnectionHandler> connections = new ArrayList<>();
 
-    ServerHandler(Socket socket) throws Exception{
+    ConnectionHandler(Socket socket) throws Exception{
         this.socket = socket;
         this.dataInputStream =  new DataInputStream(socket.getInputStream());
         this.dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
-        userList.add(this);
+        connections.add(this);
 
         broadcastData( "User has joined the chat");
     }
@@ -42,21 +42,21 @@ public class ServerHandler implements Runnable {
 
     private void broadcastData(String input) throws Exception {
 
-        for(ServerHandler serverHandler : userList){
+        for(ConnectionHandler connectionHandler : connections){
             try {
-                serverHandler.dataOutputStream.writeUTF(input);
-                serverHandler.dataOutputStream.flush();
+                connectionHandler.dataOutputStream.writeUTF(input);
+                connectionHandler.dataOutputStream.flush();
             }catch (Exception e){
                 System.out.println("Exception while broadcasting the data. e : " + e);
                 e.printStackTrace();
-                serverHandler.close();
+                connectionHandler.close();
             }
         }
 
     }
 
     private void removeUser() throws Exception {
-        userList.remove(this);
+        connections.remove(this);
         broadcastData("User has Left the chat");
     }
 
