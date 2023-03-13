@@ -5,14 +5,14 @@ import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class ServerDataHandler implements Runnable {
+public class ServerHandler implements Runnable {
 
     private Socket socket;
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
-    static ArrayList<ServerDataHandler> userList = new ArrayList<>();
+    static ArrayList<ServerHandler> userList = new ArrayList<>();
 
-    ServerDataHandler(Socket socket) throws Exception{
+    ServerHandler(Socket socket) throws Exception{
         this.socket = socket;
         this.dataInputStream =  new DataInputStream(socket.getInputStream());
         this.dataOutputStream = new DataOutputStream(socket.getOutputStream());
@@ -22,7 +22,6 @@ public class ServerDataHandler implements Runnable {
         broadcastData( "User has joined the chat");
     }
 
-    @Override
     public void run() {
 
         try {
@@ -43,13 +42,14 @@ public class ServerDataHandler implements Runnable {
 
     private void broadcastData(String input) throws Exception {
 
-        for(ServerDataHandler serverDataHandler : userList){
+        for(ServerHandler serverHandler : userList){
             try {
-                serverDataHandler.dataOutputStream.writeUTF(input);
-                serverDataHandler.dataOutputStream.flush();
+                serverHandler.dataOutputStream.writeUTF(input);
+                serverHandler.dataOutputStream.flush();
             }catch (Exception e){
                 System.out.println("Exception while broadcasting the data. e : " + e);
                 e.printStackTrace();
+                serverHandler.close();
             }
         }
 
@@ -62,20 +62,24 @@ public class ServerDataHandler implements Runnable {
 
     public void close() {
 
+        System.out.println("Client Close Method Started");
+
         try {
-            if(!socket.isClosed()){
-                socket.close();
-            }
             if(dataInputStream != null){
                 dataInputStream.close();
             }
             if(dataOutputStream != null){
                 dataOutputStream.close();
             }
+            if(!socket.isClosed()){
+                socket.close();
+            }
         }catch (Exception e){
             System.out.println("Exception while closing the socket. e : " + e);
             e.printStackTrace();
         }
+
+        System.out.println("Client Close Method Completed");
 
     }
 
